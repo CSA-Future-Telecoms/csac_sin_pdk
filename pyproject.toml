@@ -49,7 +49,7 @@ ignore-words-list = "te, te/tm, te, ba, fpr, fpr_spacing, ro, nd, donot, schem"
 timeout = 300
 
 [tool.gdsfactoryplus.pdk]
-name = "cspdk.si220.cband"
+name = "cspdk.sin300.cband"
 
 [tool.gdsfactoryplus.sim.wls]
 max = 1.6
@@ -94,8 +94,7 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"cspdk/si220/cband/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
-"cspdk/si220/oband/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
+"cspdk/sin300/cband/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
 
 [tool.ruff.pydocstyle]
 convention = "google"
