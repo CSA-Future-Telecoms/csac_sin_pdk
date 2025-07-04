@@ -25,24 +25,6 @@ def coupler(length: float = 20, gap: float = TECH.gap_strip) -> gf.Component:
 
 
 @gf.cell
-def coupler_rib(length: float = 20, gap: float = TECH.gap_rib) -> gf.Component:
-    """Returns Symmetric coupler.
-
-    Args:
-        length: of coupling region in um.
-        gap: of coupling region in um.
-    """
-    return gf.c.coupler(
-        length=length,
-        gap=gap,
-        dy=3.5,
-        dx=16,
-        cross_section="rib",
-        allow_min_radius_violation=False,
-    )
-
-
-@gf.cell
 def coupler_ring(
     length_x: float = 4,
     gap: float = TECH.gap_strip,
@@ -50,6 +32,7 @@ def coupler_ring(
     bend: ComponentSpec = "bend_euler",
     straight: ComponentSpec = "straight",
     cross_section: str = "strip",
+    length_extension=3,
 ) -> gf.Component:
     """Returns Coupler for ring.
 
