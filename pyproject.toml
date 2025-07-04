@@ -95,7 +95,6 @@ select = [
 
 [tool.ruff.lint.per-file-ignores]
 "cspdk/sin300/cband/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
-"cspdk/sin300/oband/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
 
 [tool.ruff.pydocstyle]
 convention = "google"
