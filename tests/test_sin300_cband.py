@@ -10,7 +10,7 @@ import pytest
 from gdsfactory.difftest import difftest
 from pytest_regressions.data_regression import DataRegressionFixture
 
-from cspdk.si220.cband import PDK
+from cspdk.sin300.cband import PDK
 
 
 @pytest.fixture(autouse=True)
@@ -35,7 +35,7 @@ skip_test = {
 }
 cell_names = cells.keys() - skip_test
 cell_names = [name for name in cell_names if not name.startswith("_")]
-dirpath = pathlib.Path(__file__).absolute().with_suffix(".gds").parent / "gds_ref_si220"
+dirpath = pathlib.Path(__file__).absolute().with_suffix(".gds").parent / "gds_ref_sin300"
 dirpath.mkdir(exist_ok=True, parents=True)
 
 

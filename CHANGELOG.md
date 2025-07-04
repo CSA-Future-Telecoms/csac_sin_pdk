@@ -54,7 +54,7 @@
 - update gdsfactory 8.15.0 [#72](https://github.com/gdsfactory/cspdk/pull/72)
 
 ## 0.11.2
-- add type annotations for si220 [#68](https://github.com/gdsfactory/cspdk/pull/68)
+- add type annotations for sin300 [#68](https://github.com/gdsfactory/cspdk/pull/68)
 - fix sample routing functions [#63](https://github.com/gdsfactory/cspdk/pull/63)
 - Update gdsfactory 8.13.3 [#70](https://github.com/gdsfactory/cspdk/pull/70)
 

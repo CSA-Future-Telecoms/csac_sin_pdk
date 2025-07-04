@@ -33,10 +33,20 @@ from cspdk.sin300.cband.config import PATH
 nm = 1e-3
 
 
-LayerMapCSAC_SiN = lyp_to_dataclass(PATH.lyp)
-with open(PATH.module / "layermap.py", "w") as f:
-    f.write(LayerMapCSAC_SiN)
-from layermap import LAYER
+class LayerMapFab(LayerMap):
+    ETCH: Layer = (204, 0)
+    HEATER: Layer = (39, 0)
+    MTL_KPOUT: Layer = (2, 10)
+    OPT_IO: Layer = (1, 10)
+    PAD: Layer = (41, 0)
+    QD: Layer = (50, 0)
+    WG: Layer = (203, 0)
+    floorplan: Layer = (99, 0)
+    labels: Layer = (100, 0)
+    oxide_window: Layer = (22, 0)
+
+
+LAYER = LayerMapFab
 # exec(LayerMapCSAC_SiN)
 
 def get_layer_stack(

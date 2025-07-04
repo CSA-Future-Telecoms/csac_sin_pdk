@@ -1,4 +1,4 @@
-"""Si220 pdk."""
+"""sin300 pdk."""
 
 from functools import lru_cache
 
