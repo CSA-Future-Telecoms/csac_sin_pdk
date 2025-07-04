@@ -15,6 +15,7 @@ class Path:
     repo = repo
     gds = module / "gds"
     klayout = module / "klayout"
+    sparameters = module / "sparameters"
 
     lyp = klayout / "tech" / "layers.lyp"
     lyt = klayout / "tech" / "tech.lyt"

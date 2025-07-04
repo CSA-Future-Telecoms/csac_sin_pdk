@@ -75,7 +75,7 @@ def get_layer_stack(
                 layer=LogicalLayer(layer=LAYER.WG),
                 thickness=thickness_wg,
                 zmin=0.0,
-                material="si",
+                material="sin",
                 info={"mesh_order": 1},
                 sidewall_angle=10,
                 width_to_z=0.5,
@@ -104,21 +104,16 @@ LAYER_VIEWS.to_yaml(PATH.lyp_yaml)
 
 class Tech:
     """Technology parameters."""
-
-    radius = 5
-    radius_strip = 5
-    radius_rib = 25
+    radius = 30
+    radius_strip = 30
     radius_ro = 25
-    width = 0.45
-    width_rib = 0.5
+    width = 1.2
     width_ro = 0.5
 
-    width_slab = 5
     width_heater = 2.5
     width_metal = 10
 
     gap_strip = 0.27
-    gap_rib = 0.27
 
 
 TECH = Tech()
@@ -173,28 +168,6 @@ def strip(
 
 
 @xsection
-def rib(
-    width: float = TECH.width_rib,
-    layer: LayerSpec = "WG",
-    radius: float = TECH.radius_rib,
-    radius_min: float = TECH.radius_rib,
-    bbox_layers: LayerSpecs = ("SLAB",),
-    bbox_offsets: Floats = (TECH.width_slab,),
-    **kwargs,
-) -> CrossSection:
-    """Return Rib cross_section."""
-    return gf.cross_section.cross_section(
-        width=width,
-        layer=layer,
-        radius=radius,
-        radius_min=radius_min,
-        bbox_layers=bbox_layers,
-        bbox_offsets=bbox_offsets,
-        **kwargs,
-    )
-
-
-@xsection
 def strip_heater_metal(
     width: float = TECH.width,
     layer: LayerSpec = "WG",
@@ -240,10 +213,6 @@ route_single = partial(gf.routing.route_single, cross_section="strip")
 route_bundle = partial(gf.routing.route_bundle, cross_section="strip")
 
 
-route_bundle_rib = partial(
-    route_bundle,
-    cross_section="rib",
-)
 route_bundle_metal = partial(
     route_bundle,
     straight="straight_metal",
@@ -282,7 +251,6 @@ route_astar_metal = partial(
 
 routing_strategies = dict(
     route_bundle=route_bundle,
-    route_bundle_rib=route_bundle_rib,
     route_bundle_metal=route_bundle_metal,
     route_bundle_metal_corner=route_bundle_metal_corner,
     route_astar=route_astar,
