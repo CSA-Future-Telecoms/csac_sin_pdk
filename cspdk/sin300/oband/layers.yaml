@@ -1,0 +1,51 @@
+LayerViews:
+  oxide_window:
+    layer: [22, 0]
+    hatch_pattern: lightly right-hatched
+    color: "#ffc280"
+  HEATER:
+    layer: [39, 0]
+    hatch_pattern: lightly left-hatched
+    color: "#9580ff"
+  PAD:
+    layer: [41, 0]
+    hatch_pattern: lightly right-hatched
+    color: "#80a8ff"
+  floorplan:
+    layer: [99, 0]
+    frame_color: "maroon"
+    fill_color: "black"
+    hatch_pattern: hollow
+    width: 3
+  labels:
+    layer: [100, 0]
+    hatch_pattern: lightly right-hatched
+    color: "#ffae00"
+  WG:
+    layer: [203, 0]
+    hatch_pattern: lightly left-hatched
+    color: "#ffa080"
+  ETCH:
+    layer: [204, 0]
+    hatch_pattern: lightly right-hatched
+    color: "cyan"
+  QD:
+    layer: [50, 0]
+    hatch_pattern: lightly left-hatched
+    width: 1
+    color: "purple"
+  ADK_layers:
+    group_members:
+      OPT_IO:
+        layer: [1, 10]
+        frame_color: "#80fffb"
+        fill_color: "#80fffb"
+        hatch_pattern: coarsely dotted
+        width: 1
+      MTL_KPOUT:
+        layer: [2, 10]
+        frame_color: "#ddff00"
+        fill_color: "#ddff00"
+        hatch_pattern: coarsely dotted
+        transparent: true
+        width: 1
