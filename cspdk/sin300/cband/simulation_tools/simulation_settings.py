@@ -1,8 +1,6 @@
 from cspdk.sin300.cband.tech import LAYER_STACK
 import tidy3d as td
 
-print(td.material_library["Si3N4"]["Luke2015PMLStable"])
-
 target_wl = 1.55
 um = 1e-6
 

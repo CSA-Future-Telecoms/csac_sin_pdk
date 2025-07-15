@@ -9,7 +9,7 @@ from cspdk.sin300.cband.tech import TECH
 @gf.cell
 def ring_single(
     gap: float = TECH.gap_strip,
-    radius: float = 10.0,
+    radius: float = 30.0,
     length_x: float = 4.0,
     length_y: float = 0.6,
     cross_section: CrossSectionSpec = "strip",
@@ -67,7 +67,7 @@ def ring_double(
     gap: float = TECH.gap_strip,
     gap_top: float | None = None,
     gap_bot: float | None = None,
-    radius: float = 10.0,
+    radius: float = 30.0,
     length_x: float = 0.01,
     length_y: float = 0.01,
     cross_section: CrossSectionSpec = "strip",
