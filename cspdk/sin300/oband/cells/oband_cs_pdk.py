@@ -54,17 +54,17 @@ def SiN300nm_1310nm_TE_STRIP_2x2_MMI()->gf.Component:
       c.plot()
     '''
     def add_ports(c):
-      c.add_port(name = "o1", center = (-93, -2.1), width = 0.95, orientation=0, cross_section="strip" )
-      c.add_port(name = "o2", center = (-93, 2.1), width = 0.95, orientation=0, cross_section="strip" )
-      c.add_port(name = "o3", center = (93, -2.1), width = 0.95, orientation=180, cross_section="strip" )
-      c.add_port(name = "o4", center = (93, -2.1), width = 0.95, orientation=180, cross_section="strip" )
+      c.add_port(name = "o1", center = (-93, -2.1), width = 0.95, orientation=180, cross_section="strip" )
+      c.add_port(name = "o2", center = (-93, 2.1), width = 0.95, orientation=180, cross_section="strip" )
+      c.add_port(name = "o3", center = (93, 2.1), width = 0.95, orientation=0, cross_section="strip" )
+      c.add_port(name = "o4", center = (93, -2.1), width = 0.95, orientation=0, cross_section="strip" )
     return import_gds(gdsdir/'SiN300nm_1310nm_TE_STRIP_2x2_MMI.gds', post_process=[add_ports])
 
 
 
 
 @gf.cell
-def SiN300nm_1310nm_TE_STRIP_90_Degree()->gf.Component:
+def SiN300nm_1310nm_TE_STRIP_90_Degree_bend()->gf.Component:
     '''Returns SiN300nm_1310nm_TE_STRIP_90_Degr fixed cell.
 
     .. plot::
@@ -76,8 +76,8 @@ def SiN300nm_1310nm_TE_STRIP_90_Degree()->gf.Component:
       c.plot()
     '''
     def add_ports(c): 
-      c.add_port(name = "o1", center = (-60, 0), width = 0.95, orientation=90, cross_section="strip" )
-      c.add_port(name = "o2", center = (0,  60), width = 0.95, orientation=180, cross_section="strip" )
+      c.add_port(name = "o1", center = (-60, 0), width = 0.95, orientation=270, cross_section="strip" )
+      c.add_port(name = "o2", center = (0,  60), width = 0.95, orientation=0, cross_section="strip" )
     return import_gds(gdsdir/'SiN300nm_1310nm_TE_STRIP_90_Degree_bend.gds', post_process=[add_ports])
 
 
@@ -96,7 +96,7 @@ def SiN300nm_1310nm_TE_STRIP_Grating()->gf.Component:
     '''
     def add_ports(c):
         c.add_port(name = "fibre_in", center = (-225, 0), orientation = 0, width = 10, layer = gf.get_active_pdk().get_layer("OPT_IO"))
-        c.add_port(name = "o1", center = (0,0), orientation = 180, width = 0.95, cross_section = "strip")
+        c.add_port(name = "o1", center = (0,0), orientation = 0, width = 0.95, cross_section = "strip")
     return import_gds(gdsdir/'SiN300nm_1310nm_TE_STRIP_Grating.gds', post_process=[add_ports])
 
 
@@ -117,5 +117,5 @@ def SiN300nm_1310nm_TE_STRIP_Waveguide()->gf.Component:
     '''
     def add_ports(c):
         c.add_port(name = "o1", center = (-220, 0), orientation = 180, width = 0.95, cross_section = "strip")
-        c.add_port(name = "o1", center = (220, 0), orientation = 0, width = 0.95, cross_section = "strip")
-    return import_gds(gdsdir/'SiN300nm_1310nm_TE_STRIP_Waveguide.gds')
+        c.add_port(name = "o2", center = (220, 0), orientation = 0, width = 0.95, cross_section = "strip")
+    return import_gds(gdsdir/'SiN300nm_1310nm_TE_STRIP_Waveguide.gds', post_process = [add_ports])
