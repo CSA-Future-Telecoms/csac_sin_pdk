@@ -4,6 +4,7 @@ import gdsfactory as gf
 from gdsfactory.typings import ComponentSpec
 
 from cspdk.sin300.cband.tech import TECH
+from cspdk.sin300.cband.cells import bend_euler
 
 
 @gf.cell
@@ -18,7 +19,7 @@ def coupler(length: float = 20, gap: float = TECH.gap_strip) -> gf.Component:
         length=length,
         gap=gap,
         dy=4.0,
-        dx=10.0,
+        dx=20.0,
         cross_section="strip",
         allow_min_radius_violation=False,
     )
@@ -28,7 +29,7 @@ def coupler(length: float = 20, gap: float = TECH.gap_strip) -> gf.Component:
 def coupler_ring(
     length_x: float = 4,
     gap: float = TECH.gap_strip,
-    radius: float = TECH.radius_strip,
+    radius: float = TECH.radius,
     bend: ComponentSpec = "bend_euler",
     straight: ComponentSpec = "straight",
     cross_section: str = "strip",
