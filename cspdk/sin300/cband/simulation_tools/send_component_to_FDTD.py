@@ -1,5 +1,5 @@
 import cspdk.sin300.cband.cells as cells
-from simulation_settings import material_data
+from cspdk.sin300.cband.simulation_tools.simulation_settings import material_data
 import gplugins.tidy3d as gt
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -11,7 +11,7 @@ from tidy3d.web.api.webapi import upload
 from matplotlib import pyplot as plt
 import traceback
 from functools import wraps
-from tidy3D_backend import CSAC_t3d_write_params
+from cspdk.sin300.cband.simulation_tools.tidy3D_backend import CSAC_t3d_write_params
 from datetime import datetime
 from pathlib import Path
 import os
