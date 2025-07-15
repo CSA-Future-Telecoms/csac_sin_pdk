@@ -1,17 +1,38 @@
 import cspdk.sin300.cband.cells as cells
-from simulation_settings import material_data as mapping
+from simulation_settings import material_data
 import gplugins.tidy3d as gt
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
 import inspect
 from cspdk.sin300.cband.tech import LAYER_STACK
 import tidy3d as td
 import gdsfactory as gf
 from tidy3d.web.api.webapi import upload
 from matplotlib import pyplot as plt
+import traceback
+from functools import wraps
+from tidy3D_backend import CSAC_t3d_write_params
+from datetime import datetime
+from pathlib import Path
+import os
+from cspdk.sin300.cband.config import PATH
+
 ### Make a GUI that allows you to select a component and then simulate it directly, 
 # setup the tidy3d component
 
+
+def safe_callback_from_selfroot(func):
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        try:
+            return func(self, *args, **kwargs)
+        except Exception as e:
+            print("[FATAL ERROR in callback]")
+            traceback.print_exc()
+            messagebox.showerror("Error", f"Something went wrong:\n{str(e)}")
+            if hasattr(self, "root"):
+                self.root.destroy()
+    return wrapper
 
 class tidy3D_simulation_interface():
     def __init__(self, options):
@@ -23,6 +44,7 @@ class tidy3D_simulation_interface():
 
         self._build_gui()
 
+    @safe_callback_from_selfroot
     def _build_gui(self):
         # Label
         label = ttk.Label(self.root, text="Select an Cell:")
@@ -39,7 +61,7 @@ class tidy3D_simulation_interface():
         submit_btn.pack(pady=10)
 
 
-
+    @safe_callback_from_selfroot
     def _on_choice(self):
         print("DEBUG ON CHOICE")
         self.comp_selection = self.combo.get()
@@ -80,13 +102,36 @@ class tidy3D_simulation_interface():
             default_val = defaults.get(param, "")
             entry.insert(0, str(default_val))
             self.entries[param] = entry
+
+        label = ttk.Label(self.secondary_frame, text="Z buffer either side (um)" + ":")
+        label.grid(row=i+1, column=0, padx=5, pady=3, sticky='e')
+        entry = ttk.Entry(self.secondary_frame)
+        entry.grid(row=i+1, column=1, padx=5, pady=3)
+        default_val = 4
+        entry.insert(0, str(default_val))
+        self.zmargin = entry
+
+        self.run_simulation = tk.IntVar()
+
+
+        run_box = ttk.Checkbutton(self.secondary_frame, text='Run simulation automatically? ',variable=self.run_simulation, onvalue = 1, offvalue = 0)
+        run_box.grid(row = len(param_names) + 2, column = 0, columnspan = 2, pady = 10)
+
+        plot_box = ttk.Checkbutton(self.secondary_frame, text='Plot simulation? ',variable=self.run_simulation, onvalue = 1, offvalue = 0)
+        plot_box.grid(row = len(param_names) + 3, column = 0, columnspan = 2, pady = 10)
         
+        self.simulator_tool = tk.StringVar(self.secondary_frame, "Tidy3D")
+
+        self.lum_chosen = ttk.Radiobutton(self.secondary_frame, text='Lumerical ',variable=self.simulator_tool, value = "lumerical")
+        self.tidy3d_chosen = ttk.Radiobutton(self.secondary_frame, text='Tidy3D',variable=self.simulator_tool, value = "tidy3d")
+        self.lum_chosen.grid(row = len(param_names) + 4, column = 0, columnspan = 1, pady = 10)
+        self.tidy3d_chosen.grid(row = len(param_names) + 4, column = 1, columnspan = 1, pady = 10)
 
         submit_btn = ttk.Button(self.secondary_frame, text="Submit", command=lambda: self._on_submit(self.comp_selection))
-        submit_btn.grid(row=len(param_names)+1, column=0, columnspan=2, pady=10)
+        submit_btn.grid(row=len(param_names)+5, column=0, columnspan=2, pady=10)
         
 
-
+    @safe_callback_from_selfroot
     def _on_submit(self, selection_name):
 
         # 2. Collect parameters from entry widgets
@@ -97,20 +142,29 @@ class tidy3D_simulation_interface():
         comp = gf.get_active_pdk().get_cell(selection_name)
 
         def parse_param(value):
-                if ',' in value:
-                    try:
-                        return [float(x) if '.' in x else int(x) for x in value.split(',')]
-                    except:
-                        return [x.strip() for x in value.split(',')]
-                else:
-                    try:
-                        return float(value) if '.' in value else int(value)
-                    except:
-                        return value.strip()
+            def convert_scalar(val):
+                val = val.strip().lower()
+                try:
+                    return float(val) if '.' in val else int(val)
+                except:
+                    if val.lower() in {"true", "yes", "on"}:
+                        return True
+                    elif val.lower() in {"false", "no", "off"}:
+                        return False
+                    else:                    
+                        return val  # fallback to string
+
+            # Handle comma-separated lists
+            if ',' in value:
+                return [convert_scalar(v) for v in value.split(',')]
+            else:
+                return convert_scalar(value)
 
         raw_params = {k: parse_param(v.get()) for k, v in self.entries.items()}
         sweep_params = {k: v for k, v in raw_params.items() if isinstance(v, list)}
         scalar_params = {k: v for k, v in raw_params.items() if not isinstance(v, list)}
+
+
 
         if sweep_params:
             lengths = [len(v) for v in sweep_params.values()]
@@ -129,58 +183,76 @@ class tidy3D_simulation_interface():
                 component = comp(**param_set)
             except Exception as e:
                 print(f"[ERROR] Failed to build component: {e}")
-                continue
+                return
 
 
+        print(self.simulator_tool)
  
-
-        # 4. Run your Tidy3D stuff
-        c = gt.Tidy3DComponent(
-            component=component,
-            layer_stack=LAYER_STACK,
-            material_mapping=mapping,
-            pad_xy_inner=2.0,
-            pad_xy_outer=2.0,
-            pad_z_inner=0,
-            pad_z_outer=0,
-            extend_ports=2.0,
-        )
-
-        self.plot(c)
-
-        modeler = c.get_component_modeler(
-            center_z="core", port_size_mult=(6, 4), sim_size_z=3.0
-        )
-        save_name = selection_name + "_" + "_".join([f"{k[:3]}={v}" for k, v in param_set.items()])
-        save_name = save_name[:96]
-        print(dir(LAYER_STACK.layers))
-        # thicknesses = LAYER_STACK.get_layer_to_thickness()
-        # print(dir_thicknes)
-        upload(c.get_simulation(grid_spec=td.GridSpec.auto(wavelength=1.55e-6, min_steps_per_wvl=30), 
-                                center_z = LAYER_STACK.layers["core"].thickness/2, 
-                                sim_size_z = 2e-6, 
-                                boundary_spec = td.BoundarySpec.pml(x=True, y=True, z=True)), 
-                task_name = save_name, 
-                folder_name = self.comp_selection)  
+        ### For tidy3d:
+        if self.simulator_tool.get() == "tidy3d": 
+            # 4. Run your Tidy3D stuff
+            print("Creating Tidy3D component")
+            c = gt.Tidy3DComponent(
+                component=component,
+                layer_stack=LAYER_STACK,
+                material_mapping=material_data,
+                pad_xy_inner=2.0,
+                pad_xy_outer=2.0,
+                pad_z_inner=0,
+                pad_z_outer=0,
+                extend_ports=2.0,
+            )
 
 
-        ## TODO: Save name is not working properly
-        ## Background medium is not being submitted
-        modeler = modeler.updated_copy(path_dir = save_name)
-        # sp = gt.write_sparameters(
-        #     component,
-        #     folder_name=save_name,
-        #     filepath=save_name + ".npz",
-        #     plot_mode_index=0,
-        #     plot_simulation_z = 0,
-        #     sim_size_z=0,
-        #     center_z="core",
-        # )
 
-        self.root.destroy()
+            self.plot(c)
+
+
+            modeler = c.get_component_modeler(
+                center_z="core", port_size_mult=(6, 4), sim_size_z=3.0
+            )
+
+            save_name = Path(selection_name) /   f"{datetime.now().isoformat()}{"_".join([f"{k[:3]}={v}" for k, v in param_set.items()])}"
+            save_name = Path(str(save_name)[:96])
+            print(dir(LAYER_STACK.layers))
+            # thicknesses = LAYER_STACK.get_layer_to_thickness()
+            # print(dir_thicknes)
+
+
+            # upload(modeler.simulation, 
+            #         task_name = save_name, 
+            #         folder_name = self.comp_selection)  
+
+
+
+
+
+            ## TODO: Save name is not working properly - we would rather it be in folders
+            ## Background medium is not being submitted
+
+            os.makedirs(PATH.sparameters / str(save_name))
+
+            sp = CSAC_t3d_write_params(
+                component,
+                medium = material_data["sio2"],
+                run = bool(self.run_simulation.get()),
+                folder_name=str(save_name).replace("/", "//"),
+                filepath = str(PATH.sparameters / str(save_name)),
+                plot_mode_index=0,
+                plot_simulation_z = 0,
+                sim_size_z=2*float(self.zmargin.get()))
+
+            self.root.destroy()
+        
+        elif self.simulator_tool.get() == "lumerical":
+            messagebox.showerror("Lumerical", f"Not yet implemented")
+
+        else:
+            messagebox.showerror("No simulator", f"No simulator selected!")
+
 
     
-
+    @safe_callback_from_selfroot
     def plot(self, c):
         fig = plt.figure(constrained_layout=True)
         gs = fig.add_gridspec(ncols=2, nrows=3, width_ratios=(3, 1))
@@ -195,6 +267,7 @@ class tidy3D_simulation_interface():
         axl.axis("off")
         plt.show()
 
+    @safe_callback_from_selfroot
     def run(self):
         self.root.mainloop()
  
@@ -217,6 +290,11 @@ def handle_selection(selection_name):
 
 def foo():
     print("foo")
+
+
+
+
+
 
 if __name__ == "__main__":
     cell_names = get_callable_names(cells)
