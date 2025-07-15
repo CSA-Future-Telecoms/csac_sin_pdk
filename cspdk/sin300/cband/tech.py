@@ -50,8 +50,7 @@ LAYER = LayerMapFab
 # exec(LayerMapCSAC_SiN)
 
 def get_layer_stack(
-    thickness_wg: float = 220 * nm,
-    thickness_slab: float = 100 * nm,
+    thickness_wg: float = 300 * nm,
     zmin_heater: float = 1.1,
     thickness_heater: float = 700 * nm,
     zmin_metal: float = 1.1,

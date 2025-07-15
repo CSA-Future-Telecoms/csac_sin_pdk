@@ -21,7 +21,7 @@ CONF.pdk = "cspdk.sin300.cband"
 
 @lru_cache
 def get_pdk() -> Pdk:
-    """Return Cornerstone PDK."""
+    """Return CSAC PDK."""
     return Pdk(
         name="cspdk.sin300.cband",
         cells=_cells,
