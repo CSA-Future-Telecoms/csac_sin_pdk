@@ -17,7 +17,7 @@ _cells = get_cells(cells)
 _cross_sections = get_cross_sections(tech)
 
 CONF.pdk = "cspdk.sin300.cband"
-
+CONF.max_cellname_length = 100 
 
 @lru_cache
 def get_pdk() -> Pdk:
