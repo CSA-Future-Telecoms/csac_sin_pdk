@@ -16,6 +16,7 @@ from datetime import datetime
 from pathlib import Path
 import os
 from cspdk.sin300.cband.config import PATH
+from cspdk.sin300.cband.simulation_tools.lumerical_backend import gen_lum_sim_inputs
 
 ### Make a GUI that allows you to select a component and then simulate it directly, 
 # setup the tidy3d component
@@ -34,7 +35,7 @@ def safe_callback_from_selfroot(func):
                 self.root.destroy()
     return wrapper
 
-class tidy3D_simulation_interface():
+class fdtd_simulation_interface():
     def __init__(self, options):
         self.options = options
 
@@ -163,6 +164,7 @@ class tidy3D_simulation_interface():
         raw_params = {k: parse_param(v.get()) for k, v in self.entries.items()}
         sweep_params = {k: v for k, v in raw_params.items() if isinstance(v, list)}
         scalar_params = {k: v for k, v in raw_params.items() if not isinstance(v, list)}
+        
 
 
 
@@ -175,6 +177,7 @@ class tidy3D_simulation_interface():
         else:
             sweep_len = 1
 
+
         for i in range(sweep_len):
             param_set = {k: v[i] for k, v in sweep_params.items()}
             param_set.update(scalar_params)
@@ -185,6 +188,7 @@ class tidy3D_simulation_interface():
                 print(f"[ERROR] Failed to build component: {e}")
                 return
 
+        print(param_set)
 
         print(self.simulator_tool)
  
@@ -245,8 +249,12 @@ class tidy3D_simulation_interface():
             self.root.destroy()
         
         elif self.simulator_tool.get() == "lumerical":
-            messagebox.showerror("Lumerical", f"Not yet implemented")
-
+            # static_parameter
+            ## Get the parameters taht 
+            gen_lum_sim_inputs(
+                cell=gf.partial(comp, **scalar_params),
+                parameters_swept = sweep_params,
+            )
         else:
             messagebox.showerror("No simulator", f"No simulator selected!")
 
@@ -298,5 +306,5 @@ def foo():
 
 if __name__ == "__main__":
     cell_names = get_callable_names(cells)
-    app = tidy3D_simulation_interface(cell_names)
+    app = fdtd_simulation_interface(cell_names)
     app.run()

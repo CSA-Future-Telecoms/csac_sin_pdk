@@ -4,7 +4,6 @@ import gdsfactory as gf
 from gdsfactory.typings import ComponentSpec
 
 from cspdk.sin300.cband.tech import TECH
-from cspdk.sin300.cband.cells import bend_euler
 
 
 @gf.cell
