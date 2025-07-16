@@ -45,6 +45,7 @@ def straight_strip(
     )
 
 
+
 @gf.cell
 def bend_euler(
     radius: float | None = None,
@@ -77,9 +78,12 @@ def bend_euler(
     )
 
 
+bend_circular = gf.partial(bend_euler, p = 0)
+
+
 @gf.cell
 def bend_s(
-    size: Size = (11, 1.8),
+    size: Size = (20, 2),
     cross_section: CrossSectionSpec = "strip",
     width: float | None = None,
     allow_min_radius_violation: bool = False,

@@ -16,6 +16,7 @@ class Path:
     gds = module / "gds"
     klayout = module / "klayout"
     sparameters = module / "sparameters"
+    sim_tools = module / "simulation_tools"
 
     lyp = klayout / "tech" / "layers.lyp"
     lyt = klayout / "tech" / "tech.lyt"

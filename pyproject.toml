@@ -19,13 +19,13 @@ dependencies = [
   "gplugins[sax]>=1.4.0,<2",
   "doroutes>=0.2.0"
 ]
-description = "CornerStone PDK"
+description = "CSAC SiN PDK"
 keywords = ["python"]
 license = {file = "LICENSE"}
 name = "cspdk"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
-version = "0.0.0"
+version = "0.0.1"
 
 [project.optional-dependencies]
 dev = [
@@ -95,6 +95,7 @@ select = [
 
 [tool.ruff.lint.per-file-ignores]
 "cspdk/sin300/cband/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
+"cspdk/sin300/oband/cells/__init__.py" = ["F403"]  # allowing star imports to aggregate cells
 
 [tool.ruff.pydocstyle]
 convention = "google"
@@ -121,7 +122,7 @@ message_template = "Bump to {new_version}"
 tag_template = "v{new_version}"
 
 [tool.tbump.version]
-current = "0.0.0"
+current = "0.0.1"
 # Example of a semver regexp.
 # Make sure this matches current_version before
 # using tbump
