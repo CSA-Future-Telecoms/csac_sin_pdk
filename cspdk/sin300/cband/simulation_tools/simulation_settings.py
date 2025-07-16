@@ -2,6 +2,7 @@ from cspdk.sin300.cband.tech import LAYER_STACK
 import tidy3d as td
 
 target_wl = 1.55
+target_bw = 0.1
 um = 1e-6
 
 material_data = {

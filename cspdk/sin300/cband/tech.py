@@ -44,6 +44,7 @@ class LayerMapFab(LayerMap):
     floorplan: Layer = (99, 0)
     labels: Layer = (100, 0)
     oxide_window: Layer = (22, 0)
+    PADDING: Layer = (980, 0)
 
 
 LAYER = LayerMapFab

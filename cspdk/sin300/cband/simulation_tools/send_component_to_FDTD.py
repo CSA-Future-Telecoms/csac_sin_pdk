@@ -255,8 +255,12 @@ class fdtd_simulation_interface():
                 cell=gf.partial(comp, **scalar_params),
                 parameters_swept = sweep_params,
             )
+            messagebox.showinfo("Created simulation", "Created simulation files successfully")
+            self.root.destroy()
+
         else:
             messagebox.showerror("No simulator", f"No simulator selected!")
+            self.root.destroy()
 
 
     

@@ -5,19 +5,28 @@ import cspdk.sin300.cband
 from cspdk.sin300.cband.config import PATH
 import os
 from shutil import copyfile
+from cspdk.sin300.cband import PDK
+from cspdk.sin300.cband.simulation_tools.simulation_settings import target_wl, target_bw
+
+PDK.activate()
+
+from gplugins.lumerical import write_sparameters_lumerical
 
 
 def gen_lum_sim_inputs(
     cell,
-    parameters_swept: dict[list],
+    parameters_swept: dict[str, list],
     every_combo=True,
     sim_type="FDTD",
     layer_builder_settings: dict = {},
     port_buffer: float = 0,
-    ymargin_top: float = 0,
-    ymargin_bot: float = 0,
-    xmargin_left: float = 0,
-    xmargin_right: float = 0,
+    ymargin_top: float = 2,
+    ymargin_bot: float = 2,
+    xmargin_left: float = 2,
+    xmargin_right: float = 2,
+    distance_monitors_to_pml: float = 5,
+    sim_center_wavelength : float = target_wl,
+    sim_bw : float = target_bw
 ):
     um = 1e-6
     sweep_name = cell().name + "_".join(parameters_swept.keys())
@@ -97,15 +106,19 @@ def gen_lum_sim_inputs(
     for param_combo in combinations:
         c = cell(**param_combo)
         # Some pre-processing on the cell:
-        # cspdk.si220.cband.activate
-        # component_with_padding = gf.add_padding_container(
-        #     c,
-        #     default=0,
-        #     top=ymargin_top,
-        #     bottom=ymargin_bot,
-        #     left=xmargin_left,
-        #     right=xmargin_right,
-        # )
+        component_with_padding = gf.add_padding_container(
+            c,
+            default=0,
+            top=ymargin_top,
+            bottom=ymargin_bot,
+            left=xmargin_left,
+            right=xmargin_right,
+        )
+
+        component_extended = gf.components.extend_ports(
+            component_with_padding, length=distance_monitors_to_pml + max([ymargin_top, ymargin_bot, xmargin_left, xmargin_right])
+        )
+
         if not os.path.isdir(sweep_folder_name):
             os.makedirs(sweep_folder_name)
         sweep_file_name = ""
@@ -115,7 +128,7 @@ def gen_lum_sim_inputs(
                 + "_"
                 + str(parameters_swept[param_name].index(param_combo[param_name]) + 1)
             )
-        c.write_gds(
+        component_extended.write_gds(
             os.path.join(
                 os.path.dirname(__file__),
                 sweep_folder_name,
@@ -152,24 +165,31 @@ def gen_lum_sim_inputs(
         generate_layout_script += (
             f'set("gds position reference", "Centered at origin")' + nl
         )
-        print(layer_builder_settings)
+        # generate_layout_script += (f'set("x", {component_extended.dbbox().center().x*um})' + nl)
+        # generate_layout_script += (f'set("y", {component_extended.dbbox().center().y*um})' + nl)
+        generate_layout_script += (f'set("x span", {(2*max([abs(component_extended.dbbox().p1.x), 
+                                                           abs(component_extended.dbbox().p2.x)]) + 5)*um})' + nl)
+        generate_layout_script += (f'set("y span", {(2*max([abs(component_extended.dbbox().p1.y), 
+                                                           abs(component_extended.dbbox().p2.y)]) + 5)*um})' + nl)
+
         for param, value in layer_builder_settings.items():
             generate_layout_script += f"set({param}, {value})" + nl
 
         # That's the layer builder setup, now to focus on the actual simulation setup. First introduce a simulation region and ports.
         generate_layout_script += f"add{sim_type.lower()}" + nl
-        generate_layout_script += f'set("x min", {c.dbbox().p1.x*um})' + nl
-        generate_layout_script += f'set("x max", {c.dbbox().p2.x*um})' + nl
-        generate_layout_script += f'set("y min", {c.dbbox().p1.y*um})' + nl
-        generate_layout_script += f'set("y max", {c.dbbox().p2.y*um})' + nl
+        generate_layout_script += f'set("x min", {(c.dbbox().p1.x - xmargin_left)*um})' + nl
+        generate_layout_script += f'set("x max", {(c.dbbox().p2.x + xmargin_right)*um})' + nl
+        generate_layout_script += f'set("y min", {(c.dbbox().p1.y - ymargin_bot)*um})' + nl
+        generate_layout_script += f'set("y max", {(c.dbbox().p2.y + ymargin_top)*um})' + nl
 
         # Now for the ports:
         for port in c.ports:
             generate_layout_script += f"addport" + nl
             generate_layout_script += f'set("x", {port.x*um})' + nl
             generate_layout_script += f'set("y", {port.y*um})' + nl
-            generate_layout_script += (
-                nl.join(
+            generate_layout_script += f'set("x span", {1.1*port.width*um})' + nl
+            generate_layout_script += f'set("y span", {1.1*port.width*um})' + nl
+            generate_layout_script += (nl.join(
                     [
                         f"set({port_prop}, {port_value})"
                         for port_prop, port_value in convert_port_angle(
@@ -179,6 +199,8 @@ def gen_lum_sim_inputs(
                 )
                 + nl
             )
+        generate_layout_script += f'setglobalsource("center wavelength", {sim_center_wavelength*um})' + nl
+        generate_layout_script += f'setglobalsource("wavelength span", {sim_bw*um})' + nl
         generate_layout_script += f'save("{sweep_file_name}")' + nl
         with open(
             os.path.join(sweep_folder_name, sweep_file_name + "_generate_layout.lsf"),
@@ -232,3 +254,5 @@ def convert_port_angle(angle):
     return result
 
 
+if __name__ == "__main__":
+    gen_lum_sim_inputs(gf.partial(cells.coupler, gap = 0.5), parameters_swept={"length" : [20, 40]})
