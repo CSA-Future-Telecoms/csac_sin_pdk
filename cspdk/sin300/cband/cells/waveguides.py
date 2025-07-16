@@ -225,10 +225,13 @@ def bend_s_metal(
 
 
 if __name__ == "__main__":
-    from cspdk.sin300.cband import PDK
+    
+    #TP removed logic to import components here.
+    pass
+    #from cspdk.sin300.cband import PDK
 
-    PDK.activate()
+    #PDK.activate()
 
-    c = bend_s_metal()
-    c.pprint_ports()
-    c.show()
+    #c = bend_s_metal()
+    #c.pprint_ports()
+    #c.show()

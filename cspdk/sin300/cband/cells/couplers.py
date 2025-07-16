@@ -57,8 +57,10 @@ def coupler_ring(
 
 
 if __name__ == "__main__":
-    from cspdk.sin300.cband import PDK
+    
+    pass
+    #from cspdk.sin300.cband import PDK
 
-    PDK.activate()
-    c = coupler()
-    c.show()
+    #PDK.activate()
+    #c = coupler()
+    #c.show()
