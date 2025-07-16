@@ -108,5 +108,6 @@ def ring_double(
 
 
 if __name__ == "__main__":
-    c = ring_single()
-    c.show()
+    pass
+    #c = ring_single()
+    #c.show()
