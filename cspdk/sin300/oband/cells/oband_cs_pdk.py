@@ -1,4 +1,3 @@
-
 from pathlib import Path
 from functools import partial
 import gdsfactory as gf
@@ -14,7 +13,10 @@ def add_ports(component):
     add_ports_electrical(component)
     return component
 
-gdsdir = Path('/home/davidpayne/csac_sin_pdk/cspdk/sin300/oband/gds')
+
+
+
+gdsdir = Path(__file__).parent.parent / "gds"
 
 import_gds = gf.import_gds
 
