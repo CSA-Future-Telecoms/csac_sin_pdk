@@ -10,7 +10,7 @@ import pytest
 from gdsfactory.difftest import difftest
 from pytest_regressions.data_regression import DataRegressionFixture
 
-from cspdk.sin300.cband import PDK
+from csac_sin_pdk.sin300.cband import PDK
 
 
 @pytest.fixture(autouse=True)

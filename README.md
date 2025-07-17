@@ -21,7 +21,7 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 Use python 3.11, 3.12 or 3.13. We recommend [VSCode](https://code.visualstudio.com/) as an IDE.
 
 ```
-uv pip install cspdk --upgrade
+uv pip install csac_sin_pdk --upgrade
 ```
 
 Then you need to restart Klayout to make sure the new technology installed appears.
@@ -32,8 +32,8 @@ Then you need to restart Klayout to make sure the new technology installed appea
 Then you can install with:
 
 ```bash
-git clone https://github.com/gdsfactory/cspdk.git
-cd cspdk
+git clone https://github.com/gdsfactory/csac_sin_pdk.git
+cd csac_sin_pdk
 uv venv --python 3.12
 uv sync --extra docs --extra dev
 ```

@@ -14,10 +14,10 @@ tests/gds_ref/*.oas
 tests/gds_ref_sin300/*.oas
 tests/gds_ref_si500/*.oas
 tests/gds_ref_sin300/*.oas
-cspdk/sin300/gds/*.oas
-cspdk/si500/gds/*.oas
-cspdk/sin300/gds/*.oas
-cspdk/sin300/samples/mask.gds
+csac_sin_pdk/sin300/gds/*.oas
+csac_sin_pdk/si500/gds/*.oas
+csac_sin_pdk/sin300/gds/*.oas
+csac_sin_pdk/sin300/samples/mask.gds
 docs/cells_sin300.rst
 docs/cells_si500.rst
 docs/cells_sin300.rst

@@ -1,7 +1,7 @@
 # Book settings
 # Learn more at https://jupyterbook.org/customize/config.html
 
-title: cspdk
+title: csac_sin_pdk
 author: gdsfactory
 logo: logo.png
 # Force re-execution of notebooks on each build.
@@ -23,10 +23,10 @@ html:
   use_edit_page_button: true
   use_repository_button: true
   use_issues_button: true
-  baseurl: https://github.com/gdsfactory/cspdk
+  baseurl: https://github.com/gdsfactory/csac_sin_pdk
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/gdsfactory/cspdk
+  url: https://github.com/gdsfactory/csac_sin_pdk
   path_to_book: docs # Optional path to your book, relative to the repository root
   branch: main # Which branch of the repository should be used when creating links (optional)
 launch_buttons:

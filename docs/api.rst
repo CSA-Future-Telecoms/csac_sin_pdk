@@ -1,7 +1,7 @@
-cspdk
+csac_sin_pdk
 ===================================
 
 Config
 ---------------------
 
-.. automodule:: cspdk.config
+.. automodule:: csac_sin_pdk.config
