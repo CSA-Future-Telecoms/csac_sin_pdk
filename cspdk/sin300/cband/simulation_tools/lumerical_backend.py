@@ -187,8 +187,8 @@ def gen_lum_sim_inputs(
             generate_layout_script += f"addport" + nl
             generate_layout_script += f'set("x", {port.x*um})' + nl
             generate_layout_script += f'set("y", {port.y*um})' + nl
-            generate_layout_script += f'set("x span", {1.1*port.width*um})' + nl
-            generate_layout_script += f'set("y span", {1.1*port.width*um})' + nl
+            generate_layout_script += f'set("x span", {2*port.width*um})' + nl
+            generate_layout_script += f'set("y span", {2*port.width*um})' + nl
             generate_layout_script += (nl.join(
                     [
                         f"set({port_prop}, {port_value})"
@@ -243,9 +243,9 @@ def convert_port_angle(angle):
 
     # Map base angle to axis and direction
     mapping = {
-        0: {'"injection axis"': '"x-axis"', '"direction"': '"Forward"'},
+        0: {'"injection axis"': '"x-axis"', '"direction"': '"Backward"'},
         90: {'"injection axis"': '"y-axis"', '"direction"': '"Forward"'},
-        180: {'"injection axis"': '"x-axis"', '"direction"': '"Backward"'},
+        180: {'"injection axis"': '"x-axis"', '"direction"': '"Forward"'},
         270: {'"injection axis"': '"y-axis"', '"direction"': '"Backward"'},
     }
 
@@ -256,3 +256,6 @@ def convert_port_angle(angle):
 
 if __name__ == "__main__":
     gen_lum_sim_inputs(gf.partial(cells.coupler, gap = 0.5), parameters_swept={"length" : [20, 40]})
+
+    c = gf.components.bend_circular()
+    c.show()
