@@ -20,7 +20,6 @@ class Path:
 
     lyp = klayout / "tech" / "layers.lyp"
     lyt = klayout / "tech" / "tech.lyt"
-    lyp_yaml = module / "layers.yaml"
     tech = module / "klayout" / "tech"
 
 

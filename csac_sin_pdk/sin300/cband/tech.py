@@ -100,7 +100,6 @@ def get_layer_stack(
 
 LAYER_STACK = get_layer_stack()
 LAYER_VIEWS = gf.technology.LayerViews(PATH.lyp)
-LAYER_VIEWS.to_yaml(PATH.lyp_yaml)
 
 class Tech:
     """Technology parameters."""
@@ -262,7 +261,6 @@ if __name__ == "__main__":
 
     from gdsfactory.technology.klayout_tech import KLayoutTechnology
 
-    LAYER_VIEWS = LayerViews(PATH.lyp_yaml)
     # LAYER_VIEWS.to_lyp(PATH.lyp)
 
     connectivity = cast(list[ConnectivitySpec], [("HEATER", "HEATER", "PAD")])
