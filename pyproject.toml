@@ -24,7 +24,7 @@ dependencies = [
 description = "CSAC SiN PDK"
 keywords = ["python"]
 license = {file = "LICENSE"}
-name = "csac_sin_pdk"
+name = "CS_Q2_2025"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 version = "0.0.2"
