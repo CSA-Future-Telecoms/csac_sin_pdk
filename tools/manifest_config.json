@@ -1,0 +1,32 @@
+{
+    "cutback_ridge_assembled": {
+        "power_envelope": {
+            "n": 10,
+            "wvl_of_interest_nm": 1550
+        },
+        "fsr": {
+            "height": -0.01,
+            "distance": 20
+        }
+    },
+    "cutback_rib_ass": {
+        "power_envelope": {
+            "n": 10,
+            "wvl_of_interest_nm": 1550
+        },
+        "fsr": {
+            "height": -0.01,
+            "distance": 20
+        }
+    },
+    "rings": {
+        "power_envelope": {
+            "n": 10,
+            "wvl_of_interest_nm": 1550
+        },
+        "fsr": {
+            "height": -0.01,
+            "distance": 20
+        }
+    }
+}
