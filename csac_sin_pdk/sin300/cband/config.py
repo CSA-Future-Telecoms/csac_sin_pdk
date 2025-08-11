@@ -17,6 +17,7 @@ class Path:
     klayout = module / "klayout"
     sparameters = module / "sparameters"
     sim_tools = module / "simulation_tools"
+    cells = module / "cells"
 
     lyp = klayout / "tech" / "layers.lyp"
     lyt = klayout / "tech" / "tech.lyt"
